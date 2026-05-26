@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DefaultBaseURL = "https://api.haybtech.com/v1"
+	DefaultBaseURL = "https://app.haybtech.com/v1"
 	DefaultTimeout = 15 * time.Second
 )
 
