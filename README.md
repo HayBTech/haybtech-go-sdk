@@ -8,6 +8,33 @@ Official Go SDK for the HayBTech Payment Gateway API -- mobile payments across W
 
 ---
 
+## Intégration par IA (Prompt pour Marchands)
+
+Si vous utilisez un assistant IA (comme Cursor, GitHub Copilot, ChatGPT, Claude, etc.), vous pouvez copier-coller le prompt suivant pour intégrer ce SDK de A à Z dans votre projet :
+
+```text
+Agis en tant qu'expert en développement backend Go. Je souhaite intégrer le SDK Go officiel de HayBTech (`github.com/haybtech/haybtech-go-sdk`) pour accepter des paiements mobiles de A à Z.
+
+Voici ma stack technique actuelle :
+- Framework HTTP : [ex: Gin, Fiber, Chi, net/http standard]
+- Base de données : [ex: GORM avec PostgreSQL, SQLx avec MySQL]
+- Structure de commande : [décrivez brièvement votre struct de commande]
+
+Tâches à accomplir dans le code généré :
+1. **Initialisation** : Instancier le client avec `haybtech.NewClient(os.Getenv("HAYBTECH_SECRET_KEY"))`.
+2. **Création de la session de paiement** : Définir un handler de checkout. Appeler `client.Payments.Create(...)` avec les paramètres requis (merchant_ref, amount, currency='XOF', success_url, failed_url, callback_url) et retourner l'URL de paiement dans une réponse JSON pour rediriger le client.
+3. **Webhook sécurisé** : Définir le handler de webhook. Il doit :
+   - Lire le payload brut (`io.ReadAll(r.Body)`) et récupérer le header `X-HayBTech-Signature` (ou `X-HayB-Signature`).
+   - Appeler `haybtech.ConstructEvent(payload, signature, secret)` avec le secret de webhook (`HAYBTECH_WEBHOOK_SECRET`) pour authentifier la requête.
+   - Interroger la base de données et mettre à jour la commande de manière idempotente sur réception de `payment.success` et `payment.failed`.
+   - Répondre avec un statut HTTP 200.
+4. **Sécurité & Gestion d'erreurs** : Gérer proprement les erreurs, implémenter un mécanisme de protection contre le rejeu de requêtes et logger les pannes sans fuite de secrets d'API.
+
+Génère du code Go robuste, performant, commenté et conforme aux idiomes de Go.
+```
+
+---
+
 ## Installation
 
 ```bash
@@ -200,6 +227,5 @@ This SDK is built for **Maximum Security**:
 
 - `client.Payments` -- Create, retrieve, list, and verify transactions.
 
----
-
 MIT License
+
